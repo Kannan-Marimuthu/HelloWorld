@@ -13,7 +13,20 @@ No. of working days for teacher=6
 B. How are they related ?
    B.1 A teach can teach many Classes.
    B.2 Others to be determined.
---
+   
+   ====
+   
+   Subject (already stored)
+
+subject_id    subject_name       class_id      teacher_id
+Time Table Master
+
+tt_id     class_id
+Time Table Data
+
+ttd_id     tt_id      time      day     subject_id      teacher_id
+
+--====
 The model presented in this article enables us to store data about:
 
 classes/lectures
