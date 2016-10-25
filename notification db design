@@ -28,3 +28,51 @@
 ║viewerUserID ║      ║entityID           ║      ║actionOnEntity      ║
 ╚═════════════╝      ╚═══════════════════╝      ║actorUserID         ║
                                                 ╚════════════════════╝
+CREATE TABLE IF NOT EXISTS `notifications` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `notification_id` int(11) NOT NULL,
+  `text` text NOT NULL,
+  `read` int(11) NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+CREATE TABLE Users(
+   id int not null auto_increment,
+   name string not null
+)
+
+CREATE TABLE Posts(
+   id int not null auto_increment,
+   userID int foreign key Users(id),
+   text string,
+   whenPosted datetime default getDate()
+)
+
+CREATE TABLE Comments(
+   id int not null auto_increment,
+   userID int foreign key Users(id),
+   postID int foreign key Posts(id),
+   text string
+)
+
+CREATE TABLE Followers(
+   userID int foreign key Users(id),
+   followedUserID int foreign key Users(id)
+)
+
+
+CREATE TABLE Notifications(
+   id int not null auto_increment,
+   generated date default getDate(),
+   text string //and other meta-data
+   isRead bit not null default 0
+)
+CREATE TABLE Follower (
+  userid integer,
+  Followeruserid integer,
+  primary key (userid, Followeruserid)
+);
