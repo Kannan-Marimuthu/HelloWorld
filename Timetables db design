@@ -1,0 +1,203 @@
+The time table of each class and Teacher is generated automatically by the software.
+
+No. of Period in a day=8
+
+No. of working days for teacher=6
+
+ Things of Interest are :-
+   A.1 Classes
+   A.2 Subjects
+   A.3 Teachers
+   A.4 Others to be determined
+
+B. How are they related ?
+   B.1 A teach can teach many Classes.
+   B.2 Others to be determined.
+--
+The model presented in this article enables us to store data about:
+
+classes/lectures
+instructors/lecturers
+students
+lecture attendance
+students’ / lecturers’ achievement
+
+The Big Three: Student, Instructor, and Class Tables
+
+The student, instructor, and class tables make up the core of our database.
+
+Education database model: the ‘student’ table
+
+The student table, shown above, is used to store basic data about students, but it can be expanded according to specific needs. 
+With the exception of the three contact attributes, all attributes in the table are required:
+first_name – the student’s name
+last_name – the student’s surname
+birth_date – the student’s birth date
+contact_phone – the student’s phone number
+contact_mobile – the student’s mobile phone number
+contact_mail – the student’s email address
+category_id – is a reference to the category catalog. With this structure, we’re limited to only one category per student. That works in most cases, but in some situations we may need room to list multiple categories. As you can see, adding a many-to-many relation that connects the student table with the category dictionary solves this problem. 
+In this scenario, though, we’ll need to write rather more complex queries to handle our data.
+
+The instructor table contains list of all instructors/lecturers in the organization. The attributes in the table are:
+
+first_name – the instructor’s name
+last_name – the instructor’s surname
+title – the instructor’s title (if any)
+birth_date – the instructor’s birth date
+contact_phone – the instructor’s phone number
+contact_mobile – the instructor’s mobile phone number
+contact_mail – the instructor’s email address
+The title and all three contact attributes are not mandatory.
+
+The student table and instructor table share a similar structure, but there is another possibility for organizing this information. 
+A second approach would be to have a person table (that stores all employee and student data) and has a many-to-many relation that 
+tells us all of the roles assigned to that person. The most important advantage to the second approach is that we’ll store data 
+only once. If someone is an instructor in one class and a student in another, they’ll appear only once in the database, but with both 
+roles defined.
+
+Why did we select the two-table approach for our educational database model? Generally, students and instructors behave differently, 
+both in real life and in our database. Because of that, it could be wise to store their data separately. We can find other ways to merge
+the any same-person information that appears in both tables (e.g. pair of insert/update queries based on an external id, such as 
+a social security number or VAT number).
+
+The class table is a catalog that contains details about all classes. We can have multiple instances of each class type. The attributes in the table are as follows (all are mandatory except end_date):
+
+class_type_id – is a reference to the class_type dictionary.
+name – is a short name of the class.
+description – this description is more specific than the one in the class_type table.
+start_date – the start date of the class.
+end_date – the end date of the class. It’s not mandatory because we might not always know the exact end date for each class in advance.
+completed – is a Boolean value that denotes whether all planned class activities are finished. This is handy when we’ve reached the planned end_time for a class but other class activities have yet to be completed.
+Education database model: the ‘class_type’ table
+
+
+The attend table stores information regarding which student attended which class and the final result. The attributes in the table are:
+
+student_id – is a reference to the student table
+class_id – is a reference to the class table
+class_enrollment_date – is the date when student started attending that class
+class_drop_date – the date when the student quit the class. This attribute shall have value only if the student dropped class before the class end date. In that case, the drop_class_reason_id attribute value also must be set.
+drop_class_reason_id – is a reference to the drop_class_reason table
+attendance_outcome_id – is a reference to the attendance_outcome table
+All data except class_drop_date and drop_class_reason_id is required. These two will be filled if and only if a student drops the class.
+
+
+he drop_attendance_reason table is a dictionary containing the various reasons why a student might drop a course. It has only one attribute, reason_text, and it is mandatory. An example set of values is might include: “illness”, “lost interest”, “does not have enough time” and “other reasons”.
+
+Education database model: the ‘attendance_outcome’ table
+
+The attendance_outcome table contains descriptions about student activity in a given course. The outcome_text is the only attribute in the table and it’s required. A set of possible values is: “in progress”, “completed successfully”, “completed partially” and “has not completed class”.
+The class_type table is a simple catalog, intended to store basic information about the lectures or classes offered to students. It could contain values like “English language (group)”, “Polish language (group)”, “Croatian language (group)”, “English language (in person)“, or “Dance lessons”. It has only two mandatory attributes – name and description, both of which need no further explanation.
+
+Education database model: the ‘class_schedule’ table
+
+The class_schedule table contains specific times for lectures and classes. All attributes in the table are mandatory. The class_id attribute is a reference to the class table, while start_time and end_time are the starting and ending times of that specific lecture.
+
+The teach table is used to store information about which instructor is teaching which class. The attributes in the table are:
+
+instructor_id – is a reference to the instructor table.
+class_id – is a reference to the class table.
+start_date – is the date when instructor started working on that class.
+end_date – is the date when instructor stopped working on that class. It’s not mandatory because we can’t know in advance if the instructor will teach to the class end date.
+drop_teach_reason_id – is a reference to the drop_teach_reason table. It’s not mandatory because the instructor may not drop the class.
+teach_outcome_id – is a reference to the teach_outcome_reason table.
+
+
+The student_presence table is used to store data about student presence for a specific lecture. We can assume that for each lecture the instructor will note the presence and/or absence for all students. The attributes in the table are:
+
+student_id – is a reference to the student table
+class_schedule_id – is a reference to the class_schedule table
+present – is a Boolean marking whether the student is present on lecture or not
+We could monitor students’ presence on a specific class with a query like the one that follows (assuming that @id_class contains the class id we want).
+
+SELECT
+    a.id, 
+    CONCAT(a.first_name, ' ', a.last_name) AS student_name,
+    a.number_total, 
+    CONCAT(CONVERT(a.number_present / a.number_total * 100, DECIMAL(5,2)), '%') AS percentage,
+    a.attendance_outcome
+FROM
+(
+SELECT
+    student.id, 
+    student.first_name, 
+    student.last_name, 
+    SUM(CASE WHEN student_presence.present = True THEN 1 ELSE 0 END) AS number_present,
+    COUNT(DISTINCT class_schedule.id) AS number_total,
+    attendance_outcome.outcome_text AS attendance_outcome
+FROM class
+    INNER JOIN attend ON class.id = attend.class_id
+    INNER JOIN student ON attend.student_id = student.id
+    LEFT JOIN class_schedule ON class_schedule.class_id = class.id
+    LEFT JOIN student_presence ON student_presence.student_id = student.id AND student_presence.class_schedule_id = class_schedule.id
+    LEFT JOIN attendance_outcome ON attendance_outcome.id = attend.attendance_outcome_id
+WHERE class.id = @id_class
+GROUP BY
+    student.id, 
+    student.first_name, 
+    student.last_name, 
+    attendance_outcome.outcome_text
+) a  
+
+
+The “instructor_presence” table uses the same logic as the “student_presence” table, but here we want to focus on the instructors. The attributes in the table are:
+
+instructor_id – is a reference to the instructor table
+class_schedule_id – is a reference to the class_schedule table
+present – is a Boolean value representing if the instructor present on lecture or not
+We could use the query below to monitor the instructor’s activity in class:
+
+SELECT
+    a.id, 
+    CONCAT(a.first_name, ' ', a.last_name) AS instructor_name,
+    a.number_total,
+    CONCAT(CONVERT(a.number_present / a.number_total * 100, DECIMAL(5,2)), '%') AS percentage,
+    a.teach_outcome
+FROM
+(
+SELECT
+    instructor.id, 
+    instructor.first_name, 
+    instructor.last_name, 
+    SUM(CASE WHEN instructor_presence.present = True THEN 1 ELSE 0 END) AS number_present,
+    COUNT(DISTINCT class_schedule.id) AS number_total,
+    teach_outcome.outcome_text AS teach_outcome
+FROM class
+    INNER JOIN teach ON class.id = teach.class_id
+    INNER JOIN instructor ON teach.instructor_id = instructor.id
+    LEFT JOIN class_schedule ON class_schedule.class_id = class.id
+    LEFT JOIN instructor_presence ON instructor_presence.instructor_id = instructor.id AND instructor_presence.class_schedule_id = class_schedule.id
+    LEFT JOIN teach_outcome ON teach_outcome.id = teach.teach_outcome_id
+WHERE class.id = @id_class
+GROUP BY
+    instructor.id, 
+    instructor.first_name, 
+    instructor.last_name, 
+    teach_outcome.outcome_text
+) a 
+
+
+The contact_person table is list of people that are related to students. Of course, we don’t need to list all relatives; mostly we’ll have one or two contacts per student. This is a good way to find “who you gonna call” when the student needs or wants to leave early. The attributes in the table are:
+
+first_name – is the contact person’s name
+last_name – is the person’s surname
+contact_phone – is the person’s phone number
+contact_mobile – is the person’s mobile phone number
+contact_mail – is the person’s email address
+Contact details are not mandatory, although they are very useful.
+
+Education database model: the ‘contact_person_type’ table
+
+The contact_person_type table is a dictionary with a single, required attribute: type_name. Examples of values stored in this table are: “mother”, “father”, “brother”, “sister” or “uncle”.
+
+Education database model: the ‘contact_person_student’ table
+
+The contact_person_student table is a many-to-many relation that connects Contact Persons and their type with students. The attributes in the table are (all are mandatory):
+
+contact_person_id – is a reference to the contact_person table
+student_id – is a reference to the student table
+contact_person_type_id – is a reference to the contact_person_type table
+It may be worth mentioning that this many-to-many relation connects three tables together. The attribute pair contact_person_id and student_id is used as alternate (UNIQUE) key. That way, we’ll disable duplicate entries that connect individual students with the same contact person. The attribute contact_person_type_id is not a part of the alternate key. If so, we could have multiple relations for the same contact person and the same student (using different types of relationship), and that makes no sense in real life situations.
+
+The model presented in this article should be able to cover most common needs. Still, parts of the model could be excluded in some cases, e.g. we probably wouldn’t need the entire contact person segment if our students are adults. As I said before, we’ll be adding improvements to this in time. Feel free to add suggestions and share your experience in the discussion sections.
