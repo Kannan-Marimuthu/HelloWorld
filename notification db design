@@ -1,0 +1,8 @@
+╔═════════════╗      ╔═══════════════════╗      ╔════════════════════╗
+║notification ║      ║notification_object║      ║notification_change ║
+╟─────────────╢      ╟───────────────────╢      ╟────────────────────╢
+║ID           ║—1:n—→║ID                 ║—1:n—→║ID                  ║
+║userID       ║      ║notificationID     ║      ║notificationObjectID║
+╚═════════════╝      ║object             ║      ║verb                ║
+                     ╚═══════════════════╝      ║actor               ║
+                                                ╚════════════════════╝
