@@ -1,0 +1,78 @@
+Payroll Management System MS Access Project Database Tables
+
+Department Master
+Leave Register
+Employee Master
+Pay Slip
+Staff Appointment Master
+Staff Relive Master 
+Table Name: Department 
+Field Name	Data Type	Constrains	Description
+Dcode	Text	P/K	Department Code
+Dname	Text	NOT NULL	Department Name
+ Table Name: Employee 
+Field Name	Data Type	Constrains	Description
+Ecode	Text	P/K	Employee Code
+Ename	Text	NOT NULL	Employee Name
+Dname	Text	NOT NULL	Department Name
+Shift	Number	NOT NULL	Shift
+Salaryday	Number	NOT NULL	Salaryday
+Apno	Number	NOT NULL	Appoinment Number
+Esiper	Number	NOT NULL	Esi Percentage
+Pfper	Number	NOT NULL	Pf Percentage
+Esino	Text	NOT NULL	Esi Number
+Pfno	Text	NOT NULL	Pf Number
+ Table Name: Leave Register 
+Field Name	Data Type	Constrains	Description
+Ecode	Text	NOT NULL	Employee Code
+Ename	Text	NOT NULL	Employee  Name
+Monthyear	Text	NOT NULL	Month Year
+Flag	Text	NOT NULL	Flag
+Nod	Number	NOT NULL	No Of Days                  
+ 	 	 	 	 
+ Table Name: Pay slip
+Field Name	Data Type	Constrains	Description
+Ecode	Text	R/K	Employee Code
+Ename	Text	NOT NULL	Employee Name
+Sdate	Date/Time	NOT NULL	Salarydate
+Myear	Number	NOT NULL	Month Year
+Sday	Number	NOT NULL	Salary Day
+Noofday	Number	NOT NULL	No Of Day
+Pay	Number	NOT NULL	Pay
+Esino	Text	NOT NULL	Esi Number
+Pfno	Text	NOT NULL	Pf Number
+Pfper	Number	NOT NULL	Pf Percentage
+Esiper	Number	NOT NULL	Esi Percentage
+Pfamt	Number	NOT NULL	Pf Amount
+Hramt	Number	NOT NULL	Hra Amount
+Daamt	Number	NOT NULL	Da Amount
+Taamt	Number	NOT NULL	 Travel Amount
+Oaamt1	Number	NOT NULL	 Other Amount 1
+Oaamt2	Number	NOT NULL	Other Amount 2
+Totalsal	Number	NOT NULL	Total Salary
+Canteen	Number	NOT NULL	Canteen
+Sadvance	Number	NOT NULL	Salary Advance
+Netpay	Number	NOT NULL	Net Pay
+ 	 	 	 	 
+ Table Name: Staff Appointment 
+Field Name	Data Type	Constrains	Description
+Apno	Number	P/K	Appoinment Number
+Apdate	Date/Time	NOT NULL	Appoinment Date
+Name	Text	NOT NULL	Name
+Sex	Text	NOT NULL	Sex
+Dob	Date/Time	NOT NULL	Date Of Birth
+Addr	Text	NOT NULL	Address
+Quality	Text	NOT NULL	Quality
+Salary	Text	NOT NULL	Salary
+Fname	Text	NOT NULL	Father Name
+Martialst	Text	NOT NULL	Marital Status
+Appas	Text	NOT NULL	Appointed As
+Std	Text	NOT NULL	Standard
+Prevexp	Text	NOT NULL	Previous Experience
+ 	 	 	 	 
+ Table Name: Relive 
+Field Name	Data Type	Constrains	Description
+Relno	Number	P/K	Releive Number
+Apno	Number	R/K	Appoinment Number
+Ename	Text	NOT NULL	Employee Name
+Reason	Text	NOT NULL	Reason
