@@ -1,0 +1,102 @@
+Following are some of the features that the leave management system should have, once a staff joins the organization, an account should be created by HR in the intranet and appropriate leaves should be added.
+
+1.	A person should be able to 
+
+•	login to the system through the first page of the application 
+
+•	change the password after logging into the system
+
+•	see his/her eligibility details (like how many days of leave he/she is eligible for etc)
+
+•	query the leave balance
+
+•	see his/her leave history since the time he/she joined the company/college
+
+•	apply for leave, specifying the from and to dates, reason for taking leave, address for communication while on leave and his/her superior’s email id
+
+•	see his/her current leave applications and the leave applications that are submitted to him/her for approval or cancellation 
+
+•	approve/reject the leave applications that are submitted to him/her
+
+•	withdraw his/her leave application (which has not been approved yet)
+
+•	cancel his/her leave (which has been already approved). This will need to be approved by his/her Superior
+
+•	get help about the leave system on how to use the different features of the system
+
+2.	As soon as a leave application /cancellation request /withdrawal /approval /rejection /password-change is made by the person, an automatic email should be sent to the person and his superior giving details about the action
+
+3.	The number of days of leave (as per the assumed leave policy) should be automatically credited to everybody and a notification regarding the same be sent to them automatically
+
+4.	An automatic leave-approval facility for leave applications which are older than 2 weeks should be there. Notification about the automatic leave approval should be sent to the person as well as his superior
+
+5.	A summary report of the leave details of his/her sub-ordinates should be sent to every manager periodically
+
+6.	A calendar giving the public holidays of the organization should be available on the system
+=====
+employee table
+
++--------------+
+|   employee   |
++==============+
+| employee_id  |
++--------------+
+| more rows... |
++--------------+
+
+
+Then you may have a separate table to track seniority level changes with start and end dates, 
+whereby end_date = null means the employee is currently in that seniority level.
+
++--------------+
+| level_events |
++==============+
+| event_id     |
++--------------+
+| employee_id  |
++--------------+
+| level_id     |
++--------------+
+| start_date   |
++--------------+
+| end_date     |
++--------------+
+
+You need a table to correlate seniority level with leave rates.
+
++-------------+
+| level_rates |
++=============+
+| level_id    |
++-------------+
+| rate        |
++-------------+
+
+Basically, you need something like the following pseudocode:
+
+SELECT * FROM level_events INNER JOIN level_rates ON level_id
+WHERE employee_id = <the employee in question>
+
+var months = 0
+var leave = 0
+var month_interval = 30 * 24 * 60 * 60  // days * hours * minutes * seconds
+
+for Row in Results
+  if (end_date == null)
+    end_date = NOW()
+  date_diff = end_date - start_date
+  months = date_diff / month_interval
+  leave += months * rate
+
+return leave
+Of course, you would also want a table like "leave_used" to track used leave and subtract it from the leave accrued.
+===
+
+The leave table in my DB looks like this:
+
+leave_id(PK)
+emp_id(FK)
+date_from
+date_to
+status
+comment
