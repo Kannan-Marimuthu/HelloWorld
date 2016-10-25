@@ -1,3 +1,31 @@
+Modules in Payroll System:
+
+This application consists of three modules
+
+Login Module: Using this module Employees can get unique username and password and login to payroll system.
+
+Admin Module: In order to maintain employees salary information for adding or deleting .etc related functionalities from payroll system this module is used.
+
+Functionality included in Admin Module:
+
+Admin has full permissions to add, delete, modify employee details
+Generate pay slip reports
+Interact with employees through mail.
+Employee Module: Employees can login in to payroll system and analyze salary details for every month and deduction status like loan, tax.
+
+Functionality included in Employee module are
+
+Mail interaction with administrator
+Generate pay slip report
+Managing profile
+Students can refer to module design of payroll management system which is implemented in visual basic.
+
+Features in Payroll Management System Project:
+
+Firstly this application is a web based application. It is easy to access information from any location.
+Data is managed in centralized database. Download Database design for this project.
+It is easy to analyze different aspects which are included in salary. 
+
 Payroll Management System MS Access Project Database Tables
 
 Department Master
