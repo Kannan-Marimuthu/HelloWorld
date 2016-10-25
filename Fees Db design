@@ -1,0 +1,103 @@
+A master table to store fee settings, which include month & class and the fee settings.
+
+feeMaster
+    fid  -> Primary key
+    month_year -> Stores Month Year
+    stu_class -> Class of Student
+    tuition_fee -> Tuition fee for that class
+    tuition_fee_percent -> Percentage of Tuition fee to take, defaults to 100%
+    bus_fee_percent -> Percentage of bus fee
+    late_fee_start -> Day of month from which to charge late fee
+    late_fee -> fixed late fee on per month basis
+    printing_charge -> Printing charge if any
+    other_fee -> Other fee if any
+    other_fee_reference -> Other fee reference
+Every time a student comes to pay his/her fee, calculation is made and a transaction takes place in the system. The details of the transaction are stored in two tables.
+
+Transaction master table is used to store the transactions
+
+transMaster
+    tid -> Primary key
+    purpose -> purpose of transaction, monthly fee
+    amount -> amount of transaction
+    type -> transaction mode / cash / cheque / dd
+    created -> date
+The details of this transaction are stored in another table as
+
+studentFeeDetails
+    sfid -> unique id
+    tid -> transaction id from transMaster table
+    fid -> fee id from fee settings table feeMaster
+    tuition_fee -> calculated tuition_fee
+    bus_fee -> calculated bus_fee
+    printing_charge -> calculated printing_charge
+    other_fee -> calculated other_fee
+    late_fee -> calculated late_fee
+    total_fee -> total fee calculated
+    discount -> discount if given any
+    amount_payable -> net amount payable
+    amount_paid -> paid amount
+    balance -> balance - if paid amount is greater or lesser than the original one, 
+               it is stored here
+    status -> status - true if partial fee else false
+    created -> date of creation
+=================
+have created 4 tables which are described as below:
+
+fee_type
+
+fee_type_id PRIMARY KEY
+
+fee_type TYPE OF FEE (MONTHLY, WEEKLY,ANNUAL,ONE TIME)
+
+fees
+
+fees_id PRIMARY KEY
+
+fee_heading (eg. TUITION FEE,LAB FEE, HOSTEL FEE,SPORTS FEE)
+
+amount (CURRENT CHARGE OF THE FEE, could change with time)
+
+class_id (GRADE ID, GARDE 4, GARDE 5, GRADE 6)
+
+fee_type TYPE OF FEE (MONTHLY, WEEKLY,ANNUAL,ONE TIME)
+
+archived (FEE HEADING ARCHIVED FOR USE)
+
+fee_student
+
+fee_id (RELATED fee_id (FK))
+
+student_id (RELATED student_id(FK))
+
+effective_from (DATE FROM WHEN THE FEE APPLIES TO THE STUDENT)
+
+amount (CHARGE AT THE TIME OF FEE ASSIGNMENT (applicable to particular student))
+
+discount (DISCOUNT HONORED TO STUDENT IF ANY)
+
+status (ACTIVE OR INACTIVE)
+
+transaction
+
+id PRIMARY KEY
+
+date (date and time when transaction takes place)
+
+fee_id (PAYMENT FOR)
+
+student_id ({TO BE} PAID BY)
+
+amount ( AMOUNT PAID/APPLIED)
+
+description
+
+cr ( yes or no)
+
+dr (yes or no)
+
+remarks
+
+Transaction table will store all the payments by student as well as all the amount charged for that student.
+
+I am thinking of storing amount charged to students in transaction table according to fee_type. that means, if the fee is of type WEEKLY, one record per week will be automatically added to the transaction table and the amount is marked as debit (or credit , whatever) .
