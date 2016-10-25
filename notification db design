@@ -6,3 +6,25 @@
 ╚═════════════╝      ║object             ║      ║verb                ║
                      ╚═══════════════════╝      ║actor               ║
                                                 ╚════════════════════╝
+
+
+╔════════════════════╗
+║notification        ║
+╟────────────────────╢
+║Username            ║
+║Object              ║
+║verb                ║
+║actor               ║
+║isRead              ║
+╚════════════════════╝
+
+
+
+╔═════════════╗      ╔═══════════════════╗      ╔════════════════════╗
+║notification ║      ║notification_object║      ║notification_change ║
+╟─────────────╢      ╟───────────────────╢      ╟────────────────────╢
+║ID           ║←—n:1—║ID                 ║—1:n—→║ID                  ║
+║noteObjFK    ║      ║entityType         ║      ║noteObjFK           ║
+║viewerUserID ║      ║entityID           ║      ║actionOnEntity      ║
+╚═════════════╝      ╚═══════════════════╝      ║actorUserID         ║
+                                                ╚════════════════════╝
