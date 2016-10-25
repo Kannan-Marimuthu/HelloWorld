@@ -1,0 +1,16 @@
+Online College Administration Project
+
+Online college administration project is a online web portal designed to manage entire information of college through a web portal. This project is developed in ASP.Net using SQL Server. This application consists of students details, parents details of every student, Course details, College events details, Examination dates, Syllabus and time table, Attendance of every students, Student performance reports. This application will help students and parents to know happenings in college through web.
+Purpose of this Project:
+
+College Management can easily manage students information and conduct online examinations and provide solutions through online feed back.
+
+Students can login to the system and get updates like exam dates, results, happenings in college.
+
+Books available in library and updated to this application through which students can find availability of books.
+
+Using parents module parents can view children results and fees details.
+
+Lecturers can update attendance reports to this system.
+
+Online college administration Project Software Requirements:
