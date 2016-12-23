@@ -1,0 +1,8 @@
+ | table_name   
++--------------+
+| employees    |
+| departments  |
+| dept_manager |
+| dept_emp     |
+| titles       |
+| salaries     |
